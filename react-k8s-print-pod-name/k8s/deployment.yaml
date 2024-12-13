@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-k8s-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: react-k8s-app
+  template:
+    metadata:
+      labels:
+        app: react-k8s-app
+    spec:
+      containers:
+        - name: react-k8s-app
+          image: cvsudeep/react-k8s-print-pod-name:latest
+          # imagePullPolicy: IfNotPresent
+          env:
+            - name: VITE_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: VITE_API_SERVER
+              value: "http://localhost/api"
+
+          ports:
+            - containerPort: 80

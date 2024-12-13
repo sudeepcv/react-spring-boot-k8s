@@ -1,0 +1,1 @@
+kubectl apply --server-side -f cnpg-1.24.1.yaml

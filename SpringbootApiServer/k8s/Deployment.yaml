@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-api-server-deployment
+  labels:
+    app: springboot-api-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: springboot-api-server
+  template:
+    metadata:
+      labels:
+        app: springboot-api-server
+    spec:
+      containers:
+        - name: springboot-api-server
+          image: cvsudeep/springboot-api-server:latest  # Use your Docker image
+          # imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name  # This passes the pod name dynamically as an environment variable
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pg-db-app
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-db-app
+                  key: password
+            - name: DATASOURCE_PGPOOL_URL
+              value: "jdbc:postgresql://pgpool:9999/app"
+
